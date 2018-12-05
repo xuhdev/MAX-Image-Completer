@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: max-image-completer
+spec:
+  selector:
+    app: max-image-completer
+  ports:
+  - port: 5000
+  type: NodePort
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: max-image-completer
+  labels:
+    app: max-image-completer
+spec:
+  selector:
+    matchLabels:
+      app: max-image-completer
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: max-image-completer
+    spec:
+      containers:
+      - name: max-image-completer
+        image: codait/max-image-completer:latest
+        ports:
+        - containerPort: 5000
