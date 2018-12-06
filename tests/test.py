@@ -32,11 +32,11 @@ def test_metadata():
 
 
 def test_predict():
-    model_endpoint = 'http://localhost:5000/model/predict'
-    file_path = 'assets/input/test.png'
+    model_endpoint = 'http://localhost:5000/model/predict?mask_type=left'
+    file_path = 'assets/input/test_image.jpg'
 
     with open(file_path, 'rb') as file:
-        file_form = {'image': (file_path, file, 'image/png')}
+        file_form = {'file': (file_path, file, 'image/jpg')}
         r = requests.post(url=model_endpoint, files=file_form)
 
     assert r.status_code == 200
