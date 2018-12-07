@@ -45,6 +45,9 @@ def alignMain(args):
                 print("  + Unable to load.")
             outRgb = None
         else:
+            
+            coordinates = align.getLargestFaceBoundingBox(rgb)
+            
             outRgb = align.align(args['size'], rgb,
                                     landmarkIndices=landmarkIndices,
                                     skipMulti=args['skipMulti'])
@@ -66,6 +69,7 @@ def alignMain(args):
             outBgr = cv2.cvtColor(outRgb, cv2.COLOR_RGB2BGR)
             print('writing')
             cv2.imwrite(imgName, outBgr)
+            return coordinates
 
     if args['fallbackLfw'] == None:
         print('nFallbacks:', nFallbacks)

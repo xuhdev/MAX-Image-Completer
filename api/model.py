@@ -10,6 +10,7 @@ from flask import abort
 from config import MODEL_META_DATA
 from core.backend import ModelWrapper
 from api.pre_process import alignMain
+import re
 
 
 api = Namespace('model', description='Model information and inference operations')
@@ -42,10 +43,10 @@ label_prediction = api.model('LabelPrediction', {
 # Set up parser for input data (http://flask-restplus.readthedocs.io/en/stable/parsing.html)
 input_parser = api.parser()
 # Example parser for file input
-input_parser.add_argument('file', type=FileStorage, location='files', required=True)
-input_parser.add_argument('mask_type', type=str, default='all',
+input_parser.add_argument('file', type=FileStorage, location='files', required=True, help='An image file (encoded as PNG or JPG/JPEG)')
+input_parser.add_argument('mask_type', type=str, default='center', required=True,
              choices=('random', 'center', 'left', 'grid'),
-             help='Mask Types')
+             help='Available options for mask_type are random, center, left and grid. ')
 
 @api.route('/predict')
 class Predict(Resource):
@@ -59,6 +60,10 @@ class Predict(Resource):
         result = {'status': 'error'}
 
         args = input_parser.parse_args()
+        
+        if not args['file'].mimetype.endswith(('jpg', 'jpeg', 'png')):
+            abort(400, 'Invalid file type/extension. Please provide an image in JPEG or PNG format.')
+            
         image_input_read = Image.open(args['file'])
         image_mask_type = args['mask_type']
         # creating directory for storing input
@@ -76,6 +81,7 @@ class Predict(Resource):
             except:
                 continue
         # save input image
+        image_input_read = image_input_read.convert('RGB')
         image_input_read.save('/workspace/assets/input/file/input.jpg')
         # face detection, alignment and resize using openface
         args = {
@@ -90,10 +96,16 @@ class Predict(Resource):
                 'mode':'align'
                }
         try:
-            alignMain(args)
+            coordinates = alignMain(args)
+            coordinates_string = str(coordinates)
+            pattern='^\s*\[\s*\(\s*(\d+)\s*,\s*(\d+)\s*\)\s*\(\s*(\d+)\s*,\s*(\d+)\s*\)\s*\]\s*$'
+            m = re.match(pattern, coordinates_string)
+            if m:
+                final_coordinates = '[[{},{}],[{},{}]]'.format(m.group(1), m.group(2), m.group(3),m.group(4))
+            
         except:
             #abort if there face is not detected
-            abort(400, 'Invalid input.')
+            abort(400, 'No face was detected in the image.')
 
         # store aligned input
         input_data = '/workspace/assets/input/file/align/file/input.png'
@@ -146,6 +158,6 @@ class Predict(Resource):
         response = make_response(imgByteArr)
         response.headers.set('Content-Type', 'image/jpeg')
         response.headers.set('Content-Disposition', 'attachment', filename='result.jpg')
-     
+        response.headers.set('coordinates', final_coordinates)
 
         return response

@@ -1,9 +1,9 @@
 # IBM Developer Model Asset Exchange: Image Completer
 
 This repository contains code to instantiate and deploy an image completer model. The goal is to fill in missing or 
-corrupted parts of an image. This model uses Deep Convolutional Generative Adversarial Networks (DCGAN) to fill the missing regions in an image. The model is trained using [celebA dataset](http://mmlab.ie.cuhk.edu.hk/projects/CelebA.html) and works best for completing corrupted portions in human face. Input to the model is an image with corrupted face. [OpenFace](https://github.com/cmusatyalab/openface) face recognition tool will detect and extract the corrupted face from the input image. This extracted face is then given to OpenFace alignment tool where it is aligned (inner eyes with bottom lip) and resized (64 x 64) producing an output that can be used by the model to fill the corrupted portions. The output is a collage of 20 images, in a 4x5 grid, representing the intermediate results and final completed image (bottom-right).
+corrupted parts of an image. This model uses Deep Convolutional Generative Adversarial Networks (DCGAN) to fill the missing regions in an image. The model is trained using [celebA dataset](http://mmlab.ie.cuhk.edu.hk/projects/CelebA.html) and works best for completing corrupted portions in human face. Input to the model is an image with single corrupted face. [OpenFace](https://github.com/cmusatyalab/openface) face recognition tool will detect and extract the corrupted face from the input image. This extracted face is then given to OpenFace alignment tool where it is aligned (inner eyes with bottom lip) and resized (64 x 64) producing an output that can be used by the model to fill the corrupted portions. The output is a collage of 20 images, in a 4x5 grid, representing the intermediate results and final completed image (bottom-right).
 
-The model is based on the [Tensorflow implementation of DCGAN](https://github.com/bamos/dcgan-completion.tensorflow). The model weights are hosted on [IBM Cloud Object Storage](http://max-assets.s3-api.us-geo.objectstorage.softlayer.net/image-completer/1.0/checkpoint.tar.gz). The code in this repository deploys the model as a web service in a Docker container. This repository was developed as part of the [IBM Developer Model Asset Exchange](https://developer.ibm.com/code/exchanges/models/).
+The model is based on the [Tensorflow implementation of DCGAN](https://github.com/bamos/dcgan-completion.tensorflow). The model weights are hosted on [IBM Cloud Object Storage](http://max-assets.s3-api.us-geo.objectstorage.softlayer.net/image-completer/1.0/checkpoint.tar.gz). The code in this repository deploys the model as a web service in a Docker container. This repository was developed as part of the [IBM Developer Model Asset Exchange](https://developer.ibm.com/exchanges/models/).
 
 _NOTE: Model takes about a minute to return the result._
 
@@ -25,7 +25,7 @@ _NOTE: Model takes about a minute to return the result._
 | This repository | [Apache 2.0](https://www.apache.org/licenses/LICENSE-2.0) | [LICENSE](LICENSE) |
 | Model Weights | [MIT](https://opensource.org/licenses/MIT) | [DCGAN completion Repository](https://github.com/bamos/dcgan-completion.tensorflow/blob/master/LICENSE) |
 | Model Code (3rd party) | [MIT](https://opensource.org/licenses/MIT) | [DCGAN completion Repository](https://github.com/bamos/dcgan-completion.tensorflow/blob/master/LICENSE) |
-| OpenFace | [Apache 2.0](https://www.apache.org/licenses/LICENSE-2.0) | [OpenFace Repository](https://github.com/cmusatyalab/openface) |
+| OpenFace | [Apache 2.0](https://www.apache.org/licenses/LICENSE-2.0) | [OpenFace Repository](https://github.com/cmusatyalab/openface/blob/master/LICENSE) |
 | Test assets | Various | [Assets Readme](assets/README.md) |
 
 ## Pre-requisites:
@@ -108,12 +108,13 @@ The API server automatically generates an interactive Swagger documentation page
 
 Use `model/predict` endpoint to load a test image and get completed image back from the API. Click on `'Try it out'` to start testing the model.
 
-Acceptable image types are png, jpg and jpeg. Four different mask options are provided and the selected mask will be applied on the image before proceeding to completion process. The available options are `random`, `center`, `left` and `grid`.
+Acceptable image types are png, jpg and jpeg. Four different mask options are provided and the selected mask will be applied on the image before proceeding to completion process. The available options are `random`, `center`, `left` and `grid`. 
 
 Output will be a collage of all intermediate results explaining the completion process and the last image (bottom-right) is the final completed image. 
 
+![Screenshot of the swagger output](docs/result.png)
 
-![INSERT SWAGGER UI SCREENSHOT HERE](docs/swagger-screenshot.png)
+Response header `coordinates` indicates the coordinates (top-left + bottom-right) of the extracted face from the input image.
 
 You can also test it on the command line, for example:
 
@@ -121,7 +122,7 @@ You can also test it on the command line, for example:
 $ curl -F "file=@assets/input/test_image.jpg" -XPOST http://localhost:5000/model/predict?mask_type=left -o result.jpg
 ```
 
-mask_type can take any one of the mask options.
+Available options for `mask_type` are `random`, `center`, `left` and `grid`.
 
 ### 4. Development
 
