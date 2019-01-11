@@ -12,6 +12,7 @@ import random
 import pprint
 import scipy.misc
 import numpy as np
+from six.moves import xrange
 from time import gmtime, strftime
 
 pp = pprint.PrettyPrinter()
