@@ -1,8 +1,8 @@
-[![Build Status](https://travis-ci.com/IBM/MAX-Image-Completer.svg?branch=master)](https://travis-ci.com/IBM/MAX-Image-Completer)
+[![Build Status](https://api.travis-ci.com/IBM/MAX-Image-Completer.svg?branch=master)](https://travis-ci.com/IBM/MAX-Image-Completer)
 
 # IBM Developer Model Asset Exchange: Image Completer
 
-This repository contains code to instantiate and deploy an image completer model. The goal is to fill in missing or 
+This repository contains code to instantiate and deploy an image completer model. The goal is to fill in missing or
 corrupted parts of an image. This model uses Deep Convolutional Generative Adversarial Networks (DCGAN) to fill the missing regions in an image. The model is trained on the [celebA dataset](http://mmlab.ie.cuhk.edu.hk/projects/CelebA.html) and works best for completing corrupted portions of a human face. Input to the model is an image containing a single corrupted face. The [OpenFace](https://github.com/cmusatyalab/openface) face recognition tool will detect and extract the corrupted face from the input image. This extracted face is then passed to the OpenFace alignment tool where it is aligned (inner eyes with bottom lip) and resized (64 x 64) producing an output that can be used by the model to fill the corrupted portions. The output is a collage of 20 images, in a 4x5 grid, representing the intermediate results and final completed image (bottom-right).
 
 The model is based on the [Tensorflow implementation of DCGAN](https://github.com/bamos/dcgan-completion.tensorflow). The model weights are hosted on [IBM Cloud Object Storage](https://max-assets.s3-api.us-geo.objectstorage.softlayer.net/image-completer/1.0/checkpoint.tar.gz). The code in this repository deploys the model as a web service in a Docker container. This repository was developed as part of the [IBM Developer Model Asset Exchange](https://developer.ibm.com/exchanges/models/).
@@ -11,7 +11,7 @@ _NOTE: Model takes about a minute to return the result._
 
 ## Model Metadata
 | Domain | Application | Industry  | Framework | Training Data | Input Data Format |
-| ------------- | --------  | -------- | --------- | --------- | -------------- | 
+| ------------- | --------  | -------- | --------- | --------- | -------------- |
 | Vision | Image Completion | General | Tensorflow | [celebA dataset](http://mmlab.ie.cuhk.edu.hk/projects/CelebA.html) | Images |
 
 ## References
@@ -78,7 +78,7 @@ The model will be available internally at port `5000`, but can also be accessed 
 Clone this repository locally. In a terminal, run the following command:
 
 ```
-$ git clone https://github.com/IBM/MAX-Image-Completer.git
+$ git clone https://github.com/IBM/MAX-Image-Completer
 ```
 
 Change directory into the repository base folder:
@@ -87,7 +87,7 @@ Change directory into the repository base folder:
 $ cd MAX-Image-Completer
 ```
 
-To build the docker image locally, run: 
+To build the docker image locally, run:
 
 ```
 $ docker build -t max-image-completer .
@@ -110,9 +110,9 @@ The API server automatically generates an interactive Swagger documentation page
 
 Use `model/predict` endpoint to load a test image and get completed image back from the API. Click on `'Try it out'` to start testing the model.
 
-Acceptable image types are png, jpg and jpeg. Four different mask options are provided and the selected mask will be applied on the image before proceeding to completion process. The available options are `random`, `center` (default), `left` and `grid`. 
+Acceptable image types are png, jpg and jpeg. Four different mask options are provided and the selected mask will be applied on the image before proceeding to completion process. The available options are `random`, `center` (default), `left` and `grid`.
 
-Output will be a collage of all intermediate results explaining the completion process and the last image (bottom-right) is the final completed image. 
+Output will be a collage of all intermediate results explaining the completion process and the last image (bottom-right) is the final completed image.
 
 ![Screenshot of the swagger output](docs/result.png)
 
