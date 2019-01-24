@@ -55,7 +55,7 @@ def test_predict():
     assert pixel_face_1[1] > 50
     assert pixel_face_1[2] > 20
     
-    assert pixel_face_2[0] > 120
+    assert pixel_face_2[0] > 90
     assert pixel_face_2[1] > 60
     assert pixel_face_2[2] > 30
     
