@@ -37,7 +37,6 @@ class ModelPredictAPI(PredictAPI):
 
     @MAX_API.doc('predict')
     @MAX_API.expect(input_parser)
-    @MAX_API.marshal_with(predict_response)
     def post(self):
         """Make a prediction given input data"""
         result = {'status': 'error'}
