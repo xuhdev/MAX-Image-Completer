@@ -1,7 +1,6 @@
 from core.model import ModelWrapper
 from flask_restplus import fields
 from werkzeug.datastructures import FileStorage
-from werkzeug.exceptions import BadRequest
 from flask import make_response
 from PIL import Image
 import io
@@ -35,8 +34,6 @@ class ModelPredictAPI(PredictAPI):
 
     model_wrapper = ModelWrapper()
 
-    @MAX_API.doc('predict')
-    @MAX_API.expect(input_parser)
     def post(self):
         """Make a prediction given input data"""
         result = {'status': 'error'}
