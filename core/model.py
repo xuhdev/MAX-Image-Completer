@@ -1,7 +1,8 @@
 import tensorflow as tf
 import logging
 from PIL import Image
-from config import DEFAULT_MODEL_PATH, MODEL_META_DATA as model_meta
+from config import DEFAULT_MODEL_PATH
+from config import MODEL_META_DATA as model_meta
 from maxfw.model import MAXModelWrapper
 import os
 
