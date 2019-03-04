@@ -33,10 +33,11 @@ input_parser.add_argument('mask_type', type=str, default='center', required=True
 class ModelPredictAPI(PredictAPI):
 
     model_wrapper = ModelWrapper()
-
+    
+    @MAX_API.doc('predict')
+    @MAX_API.expect(input_parser)
     def post(self):
         """Make a prediction given input data"""
-        result = {'status': 'error'}
 
         args = input_parser.parse_args()
         
