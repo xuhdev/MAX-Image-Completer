@@ -1,5 +1,5 @@
-import io
 import os
+import io
 import glob
 import shutil
 
@@ -10,8 +10,8 @@ from PIL import Image
 import re
 
 from maxfw.core import MAX_API, PredictAPI
-from core.model import ModelWrapper
 from api.pre_process import alignMain
+from core.model import ModelWrapper
 
 
 # Creating a JSON response model: https://flask-restplus.readthedocs.io/en/stable/marshalling.html#the-api-model-factory
