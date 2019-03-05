@@ -1,16 +1,17 @@
-from core.model import ModelWrapper
+import io
+import os
+import glob
+import shutil
+
 from flask_restplus import fields
 from werkzeug.datastructures import FileStorage
-from flask import make_response
+from flask import make_response, abort
 from PIL import Image
-import io
-import glob
-import os
-import shutil
-from flask import abort
-from maxfw.core import MAX_API, PredictAPI
-from api.pre_process import alignMain
 import re
+
+from maxfw.core import MAX_API, PredictAPI
+from core.model import ModelWrapper
+from api.pre_process import alignMain
 
 
 # Creating a JSON response model: https://flask-restplus.readthedocs.io/en/stable/marshalling.html#the-api-model-factory
