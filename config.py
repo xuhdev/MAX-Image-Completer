@@ -7,9 +7,9 @@ RESTPLUS_MASK_SWAGGER = False
 # Application settings
 
 # API metadata
-API_TITLE = 'Model Asset Exchange Server'
-API_DESC = 'An API for serving models'
-API_VERSION = '0.1'
+API_TITLE = 'MAX Image Completer'
+API_DESC = 'Recognize and extract faces in an image and complete the corrupted portions.'
+API_VERSION = '1.1.0'
 
 # default model
 MODEL_NAME = 'DCGAN Image Completer Model'

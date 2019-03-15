@@ -1,39 +1,21 @@
-from flask_restplus import Namespace, Resource, fields
-from werkzeug.datastructures import FileStorage
-from flask import make_response
-from PIL import Image
+import os
 import io
 import glob
-import os
 import shutil
-from flask import abort
-from config import MODEL_META_DATA
-from core.backend import ModelWrapper
-from api.pre_process import alignMain
+
+from flask_restplus import fields
+from werkzeug.datastructures import FileStorage
+from flask import make_response, abort
+from PIL import Image
 import re
 
-
-api = Namespace('model', description='Model information and inference operations')
-
-model_meta = api.model('ModelMetadata', {
-    'id': fields.String(required=True, description='Model identifier'),
-    'name': fields.String(required=True, description='Model name'),
-    'description': fields.String(required=True, description='Model description'),
-    'license': fields.String(required=False, description='Model license')
-})
-
-
-@api.route('/metadata')
-class Model(Resource):
-    @api.doc('get_metadata')
-    @api.marshal_with(model_meta)
-    def get(self):
-        """Return the metadata associated with the model"""
-        return MODEL_META_DATA
+from maxfw.core import MAX_API, PredictAPI
+from api.pre_process import alignMain
+from core.model import ModelWrapper
 
 
 # Creating a JSON response model: https://flask-restplus.readthedocs.io/en/stable/marshalling.html#the-api-model-factory
-label_prediction = api.model('LabelPrediction', {
+label_prediction = MAX_API.model('LabelPrediction', {
     'label_id': fields.String(required=False, description='Label identifier'),
     'label': fields.String(required=True, description='Class label'),
     'probability': fields.Float(required=True)
@@ -41,23 +23,22 @@ label_prediction = api.model('LabelPrediction', {
 
 
 # Set up parser for input data (http://flask-restplus.readthedocs.io/en/stable/parsing.html)
-input_parser = api.parser()
+input_parser = MAX_API.parser()
 # Example parser for file input
 input_parser.add_argument('file', type=FileStorage, location='files', required=True, help='An image file (encoded as PNG or JPG/JPEG)')
 input_parser.add_argument('mask_type', type=str, default='center', required=True,
              choices=('random', 'center', 'left', 'grid'),
              help='Available options for mask_type are random, center, left and grid. ')
 
-@api.route('/predict')
-class Predict(Resource):
+
+class ModelPredictAPI(PredictAPI):
 
     model_wrapper = ModelWrapper()
-
-    @api.doc('predict')
-    @api.expect(input_parser)
+    
+    @MAX_API.doc('predict')
+    @MAX_API.expect(input_parser)
     def post(self):
         """Make a prediction given input data"""
-        result = {'status': 'error'}
 
         args = input_parser.parse_args()
         

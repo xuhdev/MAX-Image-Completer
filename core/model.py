@@ -1,7 +1,8 @@
 import tensorflow as tf
 import logging
-from config import DEFAULT_MODEL_PATH
 from PIL import Image
+from config import DEFAULT_MODEL_PATH, MODEL_META_DATA as model_meta
+from maxfw.model import MAXModelWrapper
 import os
 
 from core.model_DCGAN import DCGAN
@@ -29,8 +30,11 @@ args = {"approach": "adam",
         "imgs":''
         }
 
-class ModelWrapper(object):
+class ModelWrapper(MAXModelWrapper):
     """Model wrapper for TensorFlow models in SavedModel format"""
+
+    MODEL_META_DATA = model_meta
+
     def __init__(self, path=DEFAULT_MODEL_PATH):
         logger.info('Loading model from: {}...'.format(path))
        
