@@ -1,4 +1,4 @@
-[![Build Status](https://api.travis-ci.com/IBM/MAX-Image-Completer.svg?branch=master)](https://travis-ci.com/IBM/MAX-Image-Completer)
+[![Build Status](https://api.travis-ci.org/IBM/MAX-Image-Completer.svg?branch=master)](https://travis-ci.org/IBM/MAX-Image-Completer) [![Website Status](https://img.shields.io/website/http/max-image-completer.max.us-south.containers.appdomain.cloud/swagger.json.svg?label=api+demo)](http://max-image-completer.max.us-south.containers.appdomain.cloud/)
 
 # IBM Developer Model Asset Exchange: Image Completer
 
