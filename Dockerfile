@@ -1,7 +1,7 @@
-FROM codait/max-base:v1.1.0
+FROM codait/max-base:v1.1.1
 
 # Fill in these with a link to the bucket containing the model and the model file name
-ARG model_bucket=http://max-assets.s3-api.us-geo.objectstorage.softlayer.net/image-completer/1.0
+ARG model_bucket=http://max-assets.s3.us.cloud-object-storage.appdomain.cloud/image-completer/1.0
 ARG model_file=checkpoint.tar.gz
 
 WORKDIR /workspace
